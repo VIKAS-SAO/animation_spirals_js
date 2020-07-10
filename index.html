@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>Animation Balls</title>
+        <style type="text/css">
+        canvas{
+            border:10px #01132b ;
+        }
+
+            </style>
+    </head>
+    <body>
+              <canvas></canvas>
+        <script type="text/javascript">
+
+       var canvas=document.querySelector("canvas");
+       canvas.height=innerHeight;
+       canvas.width=innerWidth;
+       var c=canvas.getContext("2d");
+        var colors=["#5bf6d5","#3a7ace","#0d3974","#082346","#01132b"];
+
+                var mouse={x:null,y:null};
+                document.addEventListener("mousemove",function(event){
+                            mouse.x=event.clientX;
+                            mouse.y=event.clientY;
+                });
+
+
+ 
+
+        var CIRCLES= function(x,y){
+
+            this.radius=Math.random()*80+30;
+             this.color=colors[Math.floor(Math.random()*colors.length)];
+            this.velocity=.07+Math.random()*.22;
+            this.x=x+this.radius;
+            this.y=y+this.radius;
+            this.radians=0;
+            this.old_point={x:x,y:y};
+            this.old_mouse={x:null,y:null};
+
+            
+           this.update=function(){
+                this.old_point.x=this.x;
+               this.old_point.y=this.y;
+               this.old_mouse.x+=(mouse.x-this.old_mouse.x)*.1;
+               this.old_mouse.y+=(mouse.y-this.old_mouse.y)*.1;
+
+               this.x=this.old_mouse.x+this.radius*Math.cos(this.radians);
+               this.y=this.old_mouse.y+this.radius*Math.sin(this.radians);
+                this.radians+=this.velocity;
+               this.draw();
+
+           }
+               this.draw=function(){
+
+                c.beginPath();
+           c.lineWidth=4;
+           c.moveTo(this.old_point.x,this.old_point.y);
+           c.lineTo(this.x,this.y);
+           c.strokeStyle=this.color;
+           c.stroke();
+           c.closePath();
+          
+           
+               }
+       }
+       var circle_array=[];
+       for(var i=0;i<30;i++){
+           
+            circle_array.push(new CIRCLES(200,200));
+       }
+
+             function animate(){
+                requestAnimationFrame(animate);
+                c.fillStyle="rgba(255,255,255,.01)"
+                c.fillRect(0,0,innerWidth,innerHeight);
+                circle_array.forEach(element => {
+                    element.update();
+                });
+             } 
+            animate();
+        
+                 </script>
+    </body>
+</html>
